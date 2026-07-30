@@ -9,6 +9,8 @@ requires-python = ">=3.10"
 dependencies = [
 ]
 
+[project.scripts]
+fix_unique_id_drift = "fix_unique_id_drift:main"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
