@@ -2,7 +2,6 @@
 
 import argparse
 import difflib
-import os
 import re
 import subprocess
 import sys
@@ -21,8 +20,6 @@ GET_UNIQUE_ID = re.compile(r"unique_id=(\d+)")
 
 def main():
     args = parser.parse_args()
-    print(os.getcwd())
-    print(args)
 
     modified = 0
     for file_path in args.file:
@@ -73,7 +70,6 @@ def process_tscn(file_path: Path):
     if not replacements:
         return 0
 
-    print(replacements)
     for replacement in replacements:
         b = b.replace(replacement[1], replacement[0])
 
