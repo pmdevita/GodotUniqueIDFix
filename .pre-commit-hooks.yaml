@@ -1,5 +1,5 @@
 - id: fix-unique-id
   name: Fix unique_id noise
   files: \.tscn$
-  entry: fix_unique_id_drift.py
+  entry: fix_unique_id_drift
   language: python
