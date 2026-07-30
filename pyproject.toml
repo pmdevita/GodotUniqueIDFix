@@ -15,3 +15,8 @@ fix_unique_id_drift = "fix_unique_id_drift:main"
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff.lint]
+ignore = [
+    "EXE002"
+]
