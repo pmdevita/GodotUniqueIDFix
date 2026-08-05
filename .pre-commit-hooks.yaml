@@ -3,3 +3,4 @@
   files: \.tscn$
   entry: fix_unique_id_drift
   language: python
+  require_serial: true

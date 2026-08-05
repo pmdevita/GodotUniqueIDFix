@@ -22,7 +22,7 @@ def main():
 
     for file_path in args.file:
         if process_file(BASE / file_path):
-            print(f"Modified {file_path}...")
+            print(f"Modified {file_path}")
         else:
             print(f"........ {file_path}")
 
@@ -42,8 +42,9 @@ def get_original_file(file_path: Path) -> str | None:
             check=True,
         )
     except subprocess.CalledProcessError as e:
-        print(e.stderr)
-        return None
+        if "exists on disk, but not in 'HEAD'" in e.stderr:
+            return None
+        raise
     return result.stdout
 
 
