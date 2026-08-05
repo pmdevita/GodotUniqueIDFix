@@ -4,8 +4,9 @@ import argparse
 import difflib
 import re
 import subprocess
-import sys
 from pathlib import Path
+
+from shtab import Optional
 
 parser = argparse.ArgumentParser(
     description="Restore old unique_ids that are changed due to Godot #117605"
@@ -21,29 +22,38 @@ GET_UNIQUE_ID = re.compile(r"unique_id=(\d+)")
 def main():
     args = parser.parse_args()
 
-    modified = 0
     for file_path in args.file:
-        modified += process_file(BASE / file_path)
+        if process_file(BASE / file_path):
+            print(f"Modified {file_path}...")
+        else:
+            print(f"{file_path} is good!")
 
-    print(f"Modified {modified} file(s).")
-    if modified:
-        sys.exit(1)
 
-
-def process_file(file_path: Path):
+def process_file(file_path: Path) -> bool:
     if file_path.suffix == ".tscn":
         return process_tscn(file_path)
-    return 0
+    return False
 
 
-def get_original_file(file_path: Path):
-    return subprocess.run(
-        ["git", "show", f"HEAD:{file_path}"], capture_output=True, text=True, check=True
-    ).stdout
+def get_original_file(file_path: Path) -> Optional[None]:
+    try:
+        result = subprocess.run(
+            ["git", "show", f"HEAD:{file_path}"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+    except subprocess.CalledProcessError as e:
+        print(e)
+        return None
+    return result.stdout
 
 
-def process_tscn(file_path: Path):
+def process_tscn(file_path: Path) -> bool:
     a = get_original_file(file_path)
+    if a is None:
+        return False
+
     with open(file_path) as f:
         b = f.read()
     diff = difflib.ndiff(a.split("\n"), b.split("\n"))
@@ -68,14 +78,14 @@ def process_tscn(file_path: Path):
             sequence = []
 
     if not replacements:
-        return 0
+        return False
 
     for replacement in replacements:
         b = b.replace(replacement[1], replacement[0])
 
     with open(file_path, "w") as f:
         f.write(b)
-    return 1
+    return True
 
 
 def process_sequence(sequence: list[str]) -> tuple[str, str] | None:
