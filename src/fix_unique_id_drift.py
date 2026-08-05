@@ -24,7 +24,7 @@ def main():
         if process_file(BASE / file_path):
             print(f"Modified {file_path}...")
         else:
-            print(f"{file_path} is good!")
+            print(f"........ {file_path}")
 
 
 def process_file(file_path: Path) -> bool:
@@ -42,7 +42,7 @@ def get_original_file(file_path: Path) -> str | None:
             check=True,
         )
     except subprocess.CalledProcessError as e:
-        print(e)
+        print(e.stderr)
         return None
     return result.stdout
 
