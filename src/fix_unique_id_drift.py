@@ -6,8 +6,6 @@ import re
 import subprocess
 from pathlib import Path
 
-from shtab import Optional
-
 parser = argparse.ArgumentParser(
     description="Restore old unique_ids that are changed due to Godot #117605"
 )
@@ -35,7 +33,7 @@ def process_file(file_path: Path) -> bool:
     return False
 
 
-def get_original_file(file_path: Path) -> Optional[None]:
+def get_original_file(file_path: Path) -> None:
     try:
         result = subprocess.run(
             ["git", "show", f"HEAD:{file_path}"],
