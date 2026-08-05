@@ -33,7 +33,7 @@ def process_file(file_path: Path) -> bool:
     return False
 
 
-def get_original_file(file_path: Path) -> None:
+def get_original_file(file_path: Path) -> str | None:
     try:
         result = subprocess.run(
             ["git", "show", f"HEAD:{file_path}"],
